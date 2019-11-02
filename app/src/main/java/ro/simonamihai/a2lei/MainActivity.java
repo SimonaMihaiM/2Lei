@@ -1,16 +1,23 @@
 package ro.simonamihai.a2lei;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +27,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ListView r = findViewById(R.id.res);
+        Expense[] values = new Expense[]{
+                new Expense(new Date(), "A", 2.5),
+                new Expense(new Date(), "B", 4.5)
+        };
+
+        final ArrayList<Expense> list = new ArrayList<>();
+        Collections.addAll(list, values);
+
+        ArrayAdapter adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                list);
+        r.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
