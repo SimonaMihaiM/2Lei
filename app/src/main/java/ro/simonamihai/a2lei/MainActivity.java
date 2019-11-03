@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
                 showPopup(view);
             }
         });
+
+
     }
 
     @Override
@@ -75,6 +78,43 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            setContentView(R.layout.settings_main);
+            return true;
+        }
+
+        if (id == R.id.action_reports) {
+            setContentView(R.layout.reports_main);
+            Button back = findViewById(R.id.button_report_back);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setContentView(R.layout.activity_main);
+                    Toolbar toolbar = findViewById(R.id.toolbar);
+                    setSupportActionBar(toolbar);
+
+                    ListView r = findViewById(R.id.res);
+                    Expense[] values = new Expense[]{
+                            new Expense(new Date(), "A", 2.5),
+                            new Expense(new Date(), "B", 4.5)
+                    };
+
+                    final ArrayList<Expense> list = new ArrayList<>();
+                    Collections.addAll(list, values);
+
+//                    ArrayAdapter adapter = new ArrayAdapter<>(this,
+//                            android.R.layout.simple_list_item_1,
+//                            list);
+//                    r.setAdapter(adapter);
+
+                    FloatingActionButton fab = findViewById(R.id.fab);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showPopup(view);
+                        }
+                    });
+                }
+            });
             return true;
         }
 
