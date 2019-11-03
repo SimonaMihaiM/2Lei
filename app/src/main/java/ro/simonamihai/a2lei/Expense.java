@@ -1,5 +1,6 @@
 package ro.simonamihai.a2lei;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Expense {
@@ -39,10 +40,7 @@ public class Expense {
 
     @Override
     public String toString() {
-        return "Expense{" +
-                "createdAt=" + createdAt +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        CharSequence date = android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
+        return date + "\t" + name + "\t" + price;
     }
 }
