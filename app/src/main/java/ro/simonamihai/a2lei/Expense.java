@@ -1,6 +1,5 @@
 package ro.simonamihai.a2lei;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Expense {
