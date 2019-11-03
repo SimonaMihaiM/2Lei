@@ -25,6 +25,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.showMainScreen();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_actions, popup.getMenu());
+        popup.show();
+    }
+
+    public void showMainScreen() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,24 +68,27 @@ public class MainActivity extends AppCompatActivity {
                 showPopup(view);
             }
         });
-
-
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void showSettingsScreen() {
+        setContentView(R.layout.settings_main);
+        Button back = findViewById(R.id.button_report_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMainScreen();
+            }
+        });
     }
-
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_actions, popup.getMenu());
-        popup.show();
+    public void showReportsScreen() {
+        setContentView(R.layout.reports_main);
+        Button back = findViewById(R.id.button_report_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMainScreen();
+            }
+        });
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,43 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            setContentView(R.layout.settings_main);
+            showSettingsScreen();
             return true;
         }
 
         if (id == R.id.action_reports) {
-            setContentView(R.layout.reports_main);
-            Button back = findViewById(R.id.button_report_back);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setContentView(R.layout.activity_main);
-                    Toolbar toolbar = findViewById(R.id.toolbar);
-                    setSupportActionBar(toolbar);
-
-                    ListView r = findViewById(R.id.res);
-                    Expense[] values = new Expense[]{
-                            new Expense(new Date(), "A", 2.5),
-                            new Expense(new Date(), "B", 4.5)
-                    };
-
-                    final ArrayList<Expense> list = new ArrayList<>();
-                    Collections.addAll(list, values);
-
-//                    ArrayAdapter adapter = new ArrayAdapter<>(this,
-//                            android.R.layout.simple_list_item_1,
-//                            list);
-//                    r.setAdapter(adapter);
-
-                    FloatingActionButton fab = findViewById(R.id.fab);
-                    fab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showPopup(view);
-                        }
-                    });
-                }
-            });
+            showReportsScreen();
             return true;
         }
 
