@@ -4,11 +4,11 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buget_add_back"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back" />
+        android:text="@string/back_btn_label" />
 
     <EditText
         android:id="@+id/editText"
@@ -16,14 +16,14 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Expense name" />
+        android:text="@string/budget_label" />
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Expense price"
+        android:hint="@string/budget_limit"
         android:inputType="numberDecimal" />
 
     <Button
@@ -34,5 +34,5 @@
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimaryDark"
         android:backgroundTintMode="add"
-        android:text="Add expense" />
+        android:text="@string/set_budget" />
 </LinearLayout>

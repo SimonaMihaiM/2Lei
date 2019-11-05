@@ -28,20 +28,25 @@ public class MainActivity extends AppCompatActivity {
         this.showMainScreen();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_actions, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_new_expense) {
+                    showNewExpenseScreen();
+                }
+                if (item.getItemId() == R.id.action_new_budget) {
+                    showNewBudgetScreen();
+                }
+                return true;
+            }
+        });
         popup.show();
     }
-
     public void showMainScreen() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -69,9 +74,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
     public void showSettingsScreen() {
         setContentView(R.layout.settings_main);
-        Button back = findViewById(R.id.button_report_back);
+        Button back = findViewById(R.id.back_btn_settings);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +93,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void showNewBudgetScreen () {
+        setContentView(R.layout.add_budget_main);
+        Button back = findViewById(R.id.buget_add_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMainScreen();
+            }
+        });
+    }
+    public void showNewExpenseScreen () {
+        setContentView(R.layout.add_expense_main);
+        Button back = findViewById(R.id.expense_add_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMainScreen();
+            }
+        });
+    }
+
     public void showReportsScreen() {
         setContentView(R.layout.reports_main);
         Button back = findViewById(R.id.button_report_back);

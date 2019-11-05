@@ -4,4 +4,11 @@
     <string name="action_new">New expense</string>
     <string name="action_new_budget">New budget</string>
     <string name="action_reports">Reports</string>
+    <string name="set_budget">Set budget</string>
+    <string name="budget_limit">Budget limit</string>
+    <string name="budget_label">Budget label</string>
+    <string name="back_btn_label">Back</string>
+    <string name="expense_name">Expense name</string>
+    <string name="expense_price">Expense price</string>
+    <string name="add_expense_btn_label">Add expense</string>
 </resources>
