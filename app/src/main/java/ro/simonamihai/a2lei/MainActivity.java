@@ -1,5 +1,6 @@
 package ro.simonamihai.a2lei;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         });
         popup.show();
     }
+
     public void showMainScreen() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -82,48 +84,24 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     public void showSettingsScreen() {
-        setContentView(R.layout.settings_main);
-        Button back = findViewById(R.id.back_btn_settings);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMainScreen();
-            }
-        });
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
-    public void showNewBudgetScreen () {
-        setContentView(R.layout.add_budget_main);
-        Button back = findViewById(R.id.buget_add_back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMainScreen();
-            }
-        });
+    public void showNewBudgetScreen() {
+        Intent intent = new Intent(this, BudgetActivity.class);
+        startActivity(intent);
     }
-    public void showNewExpenseScreen () {
-        setContentView(R.layout.add_expense_main);
-        Button back = findViewById(R.id.expense_add_back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMainScreen();
-            }
-        });
+
+    public void showNewExpenseScreen() {
+        Intent intent = new Intent(this, ExpenseActivity.class);
+        startActivity(intent);
     }
 
     public void showReportsScreen() {
-        setContentView(R.layout.reports_main);
-        Button back = findViewById(R.id.button_report_back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMainScreen();
-            }
-        });
+        Intent intent = new Intent(this, ReportsActivity.class);
+        startActivity(intent);
     }
 
     @Override
