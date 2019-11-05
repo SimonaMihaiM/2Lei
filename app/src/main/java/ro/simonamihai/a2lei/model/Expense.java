@@ -1,4 +1,4 @@
-package ro.simonamihai.a2lei;
+package ro.simonamihai.a2lei.model;
 
 import java.util.Date;
 
@@ -12,6 +12,7 @@ public class Expense {
         this.name = name;
         this.price = price;
     }
+    public Expense () {}
 
     public Date getCreatedAt() {
         return createdAt;

@@ -7,15 +7,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import ro.simonamihai.a2lei.model.Expense;
+import ro.simonamihai.a2lei.ro.simonamihai.a2lei.model.db.ExpenseDb;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -55,17 +60,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ListView r = findViewById(R.id.res);
-        Expense[] values = new Expense[]{
-                new Expense(new Date(), "A", 2.5),
-                new Expense(new Date(), "B", 4.5)
-        };
 
-        final ArrayList<Expense> list = new ArrayList<>();
-        Collections.addAll(list, values);
+        ExpenseDb e = new ExpenseDb();
+        InputStreamReader is = null;
+        try {
+            is = new InputStreamReader(getAssets().open("expenses.csv"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
 
         ArrayAdapter adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1,
-                list);
+
+                android.R.layout.simple_list_item_1, e.getExpenses(is) );
         r.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
