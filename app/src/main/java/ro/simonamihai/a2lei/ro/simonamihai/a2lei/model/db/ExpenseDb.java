@@ -22,7 +22,7 @@ public class ExpenseDb extends Expense {
     public ExpenseDb() {
     }
 
-    public ArrayList getExpenses(InputStreamReader is) {
+    public ArrayList<Expense> getExpenses(InputStreamReader is) {
         ArrayList<Expense> values = new ArrayList<>();
         try {
 

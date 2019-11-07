@@ -9,9 +9,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ro.simonamihai.a2lei.model.Expense;
 import ro.simonamihai.a2lei.ro.simonamihai.a2lei.model.db.ExpenseDb;
 
@@ -27,6 +31,9 @@ import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
+    ExpenseAdapter expenseAdapter;
+    ArrayList<Expense> expenses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ListView r = findViewById(R.id.res);
-
         ExpenseDb e = new ExpenseDb();
         InputStreamReader is = null;
         try {
@@ -68,12 +73,22 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        expenses = e.getExpenses(is);
 
+        double total = 0;
+        for (Expense expense : expenses) {
+            total+=expense.getPrice();
+        }
 
-        ArrayAdapter adapter = new ArrayAdapter<>(this,
+        TextView totalV = findViewById(R.id.totalExpenses);
+        totalV.setText("-"+total+" RON");
+        expenseAdapter = new ExpenseAdapter(expenses);
 
-                android.R.layout.simple_list_item_1, e.getExpenses(is) );
-        r.setAdapter(adapter);
+        recyclerView = findViewById(R.id.res);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(expenseAdapter);
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -40,7 +40,16 @@ public class Expense {
 
     @Override
     public String toString() {
-        CharSequence date = android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
+        CharSequence date = android.text.format.DateFormat.format("yyyy-MM-dd", this.createdAt);
         return date + "\t" + name + "\t" + price;
+    }
+
+    public String getStringCreatedAt () {
+        return android.text.format.DateFormat.format("yyyy-MM-dd", this.createdAt).toString();
+    }
+
+
+    public String getStringPrice() {
+        return "-"+price+" RON";
     }
 }
