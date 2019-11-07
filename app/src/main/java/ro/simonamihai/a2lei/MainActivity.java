@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         totalV.setText("-"+total+" RON");
         expenseAdapter = new ExpenseAdapter(expenses);
 
+        TextView currentDate = findViewById(R.id.currentDate);
+        currentDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString());
+
         recyclerView = findViewById(R.id.res);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());

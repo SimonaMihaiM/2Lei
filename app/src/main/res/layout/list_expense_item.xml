@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cv"
+        android:layout_margin="5sp"
         android:outlineAmbientShadowColor="@color/cardview_dark_background"
-        >
+        app:cardBackgroundColor="#BCFFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_margin="20dp"
-                android:layout_gravity="center"
-                android:id="@+id/textExpenseName"
-                android:text="Place_holder"/>
+            android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/textExpenseName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_margin="20dp"
                 android:layout_gravity="center"
-                android:textColor="@android:color/holo_red_light"
+                android:layout_margin="20dp"
+                android:text="Place_holder"
+                android:textSize="18sp" />
+
+            <TextView
                 android:id="@+id/textExpensePrice"
-                android:text="Place_holder"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginStart="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="Place_holder"
+                android:textColor="#E43C3C"
+                android:textSize="18sp" />
+
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,11 +48,13 @@
                 android:id="@+id/textExpenseDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="40dp"
-                android:alpha="0"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginStart="325dp"
+                android:layout_marginTop="50sp"
+                android:layout_marginBottom="50sp"
+                android:alpha="100"
                 android:text="Place_holder"
-                android:textColor="#009688"
+                android:textColor="#919191"
                 android:textSize="12sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
