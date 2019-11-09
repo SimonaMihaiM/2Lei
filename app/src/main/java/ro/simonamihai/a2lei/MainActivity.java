@@ -6,28 +6,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Expense;
-import ro.simonamihai.a2lei.ro.simonamihai.a2lei.model.db.ExpenseDb;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -67,21 +61,27 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ExpenseDb e = new ExpenseDb();
-        InputStreamReader is = null;
-        try {
-            is = new InputStreamReader(getAssets().open("expenses.csv"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        expenses = e.getExpenses(is);
+//        InputStreamReader is = null;
+//        try {
+//            is = new InputStreamReader(getAssets().open("expenses.csv"));
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        expenses = e.getExpenses(is);
 
+        Expense a = new Expense(new Date(System.currentTimeMillis()), "MyExpense", 2.5);
+        DatabaseManager dbManager = new DatabaseManager(this.getApplicationContext());
+        dbManager.open();
+        dbManager.insert(a);
+        dbManager.close();
+        expenses = e.getExpenses(getApplicationContext());
         double total = 0;
         for (Expense expense : expenses) {
-            total+=expense.getPrice();
+            total += expense.getPrice();
         }
 
         TextView totalV = findViewById(R.id.totalExpenses);
-        totalV.setText("-"+total+" RON");
+        totalV.setText("-" + total + " RON");
         expenseAdapter = new ExpenseAdapter(expenses);
 
         TextView currentDate = findViewById(R.id.currentDate);
