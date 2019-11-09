@@ -18,14 +18,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     List<Expense> expenseList;
     Context context;
 
-    public ExpenseAdapter(List<Expense>expenseList)
-    {
+    public ExpenseAdapter(List<Expense> expenseList) {
         this.expenseList = expenseList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_expense_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_expense_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         context = parent.getContext();
         return viewHolder;
@@ -41,7 +40,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"The position is:"+position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "The position is:" + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -53,15 +52,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         return expenseList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textExpenseName;
         TextView textExpenseDate;
         TextView textExpensePrice;
         CardView cv;
 
-        public ViewHolder(View itemView)
-        {
+        public ViewHolder(View itemView) {
             super(itemView);
             textExpenseName = itemView.findViewById(R.id.textExpenseName);
             textExpenseDate = itemView.findViewById(R.id.textExpenseDate);

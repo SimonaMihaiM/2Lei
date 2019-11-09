@@ -1,14 +1,13 @@
 package ro.simonamihai.a2lei;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
 
 public class ExpenseActivity extends AppCompatActivity {
 

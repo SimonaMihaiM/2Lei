@@ -31,10 +31,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:foreground="#00FFFFFF"
         app:backgroundTint="#4CAF50"
         app:fabCustomSize="50dp"
         app:fabSize="normal"
-        android:foreground="#00FFFFFF"
         app:maxImageSize="50dp"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
