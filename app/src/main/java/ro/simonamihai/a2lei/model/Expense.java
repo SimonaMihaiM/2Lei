@@ -3,6 +3,7 @@ package ro.simonamihai.a2lei.model;
 import java.util.Date;
 
 public class Expense {
+    private int id;
     private Date createdAt;
     private String name;
     private double price;
@@ -12,7 +13,16 @@ public class Expense {
         this.name = name;
         this.price = price;
     }
-    public Expense () {}
+
+    public Expense(int id, Date createdAt, String name, double price) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.name = name;
+        this.price = price;
+    }
+
+    public Expense() {
+    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -44,12 +54,20 @@ public class Expense {
         return date + "\t" + name + "\t" + price;
     }
 
-    public String getStringCreatedAt () {
+    public String getStringCreatedAt() {
         return android.text.format.DateFormat.format("yyyy-MM-dd", this.createdAt).toString();
     }
 
 
     public String getStringPrice() {
-        return "-"+price+" RON";
+        return "-" + price + " RON";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
