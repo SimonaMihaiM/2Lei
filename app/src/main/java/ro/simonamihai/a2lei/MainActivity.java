@@ -69,11 +69,6 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        expenses = e.getExpenses(is);
 
-        Expense a = new Expense(new Date(System.currentTimeMillis()), "MyExpense", 2.5);
-        DatabaseManager dbManager = new DatabaseManager(this.getApplicationContext());
-        dbManager.open();
-        dbManager.insert(a);
-        dbManager.close();
         expenses = e.getExpenses(getApplicationContext());
         double total = 0;
         for (Expense expense : expenses) {
