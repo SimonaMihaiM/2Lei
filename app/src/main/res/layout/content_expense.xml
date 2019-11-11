@@ -9,22 +9,46 @@
     tools:showIn="@layout/activity_expense">
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/insertExpenseName"
         android:layout_width="410dp"
         android:layout_height="49dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="3dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/inserExpensePrice"
         android:layout_width="405dp"
         android:layout_height="47dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="1dp"
+        android:layout_marginEnd="3dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        app:layout_constraintTop_toBottomOf="@+id/editText3"
-        tools:layout_editor_absoluteX="3dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/insertExpenseName" />
+
+    <Button
+        android:id="@+id/insertExpenseBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="162dp"
+        android:layout_marginTop="511dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="32dp"
+        android:text="Insert"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inserExpensePrice"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
