@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -13,51 +14,57 @@
         android:outlineAmbientShadowColor="@color/cardview_dark_background"
         app:cardBackgroundColor="#BCFFFFFF">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/textExpenseName"
+            app:layout_constraintTop_toTopOf="@+id/textExpenseName">
 
             <TextView
                 android:id="@+id/textExpenseName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
-                android:text="Place_holder"
-                android:textSize="18sp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/expense_name"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="24dp"
+                tools:layout_conversion_absoluteWidth="117dp" />
 
             <TextView
                 android:id="@+id/textExpensePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:layout_marginStart="150dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:text="Place_holder"
-                android:textColor="#E43C3C"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:layout_marginTop="24dp"
+                android:text="@string/expense_price"
+                android:textColor="@color/expenseMainRed"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.959"
+                app:layout_constraintStart_toEndOf="@+id/textExpenseName"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="24dp"
+                tools:layout_conversion_absoluteWidth="147dp" />
 
             <TextView
                 android:id="@+id/textExpenseDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:layout_marginStart="325dp"
-                android:layout_marginTop="50sp"
-                android:layout_marginBottom="50sp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="52dp"
                 android:alpha="100"
-                android:text="Place_holder"
+                android:text="Date"
                 android:textColor="#919191"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textExpensePrice" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>
