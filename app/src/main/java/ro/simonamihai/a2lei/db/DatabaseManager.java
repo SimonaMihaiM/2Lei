@@ -59,4 +59,7 @@ public class DatabaseManager {
         database.delete(DatabaseHelper.TABLE_NAME, DatabaseHelper.ID + "=" + expense.getId(), null);
     }
 
+    public void deleteAll(){
+        database.delete(DatabaseHelper.TABLE_NAME, "1", null);
+    }
 }
