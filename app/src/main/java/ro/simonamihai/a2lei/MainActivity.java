@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_new_budget) {
                     showNewBudgetScreen();
                 }
+                if (item.getItemId() == R.id.load_test_data) {
+                    loadTestData();
+                }
                 return true;
             }
         });
@@ -62,13 +67,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ExpenseDb e = new ExpenseDb();
-//        InputStreamReader is = null;
-//        try {
-//            is = new InputStreamReader(getAssets().open("expenses.csv"));
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-//        expenses = e.getExpenses(is);
 
         expenses = e.getExpenses(getApplicationContext());
         double total = 0;
@@ -123,6 +121,26 @@ public class MainActivity extends AppCompatActivity {
     public void showReportsScreen() {
         Intent intent = new Intent(this, ReportsActivity.class);
         startActivity(intent);
+    }
+
+    public void loadTestData() {
+        ExpenseDb e = new ExpenseDb();
+        InputStreamReader is = null;
+        try {
+            is = new InputStreamReader(getAssets().open("expenses.csv"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        expenses = e.getExpensesFile(is);
+        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+        databaseManager.open();
+        databaseManager.deleteAll();
+        for(Expense expense : expenses){
+            databaseManager.insert(expense);
+        }
+
+        databaseManager.close();
+        showMainScreen();
     }
 
     @Override

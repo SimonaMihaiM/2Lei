@@ -14,13 +14,15 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:fragment="ro.simonamihai.a2lei.SettingsActivity$MessagesFragment"
-        app:icon="@drawable/messages"
-        app:key="messages_header"
-        app:title="@string/messages_header" />
+
+    <SwitchPreference
+        android:layout_width="match_parent"
+        app:defaultValue="false"
+        app:key="switch_preference_1"
+        app:title="Switch preference" />
 
     <Preference
         app:fragment="ro.simonamihai.a2lei.SettingsActivity$SyncFragment"

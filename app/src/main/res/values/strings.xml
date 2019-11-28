@@ -30,4 +30,5 @@
     <string name="title_activity_expense">ExpenseActivity</string>
     <string name="title_activity_budget">Budget</string>
     <string name="title_activity_reports">ReportsActivity</string>
+    <string name="load_data_header">Load data</string>
 </resources>

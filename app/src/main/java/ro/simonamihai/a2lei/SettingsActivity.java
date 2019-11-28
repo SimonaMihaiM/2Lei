@@ -1,6 +1,12 @@
 package ro.simonamihai.a2lei;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreference;
+import ro.simonamihai.a2lei.db.DatabaseManager;
+import ro.simonamihai.a2lei.model.Expense;
+import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
 public class SettingsActivity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -80,14 +92,21 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.header_preferences, rootKey);
+            SwitchPreference s = findPreference("switch_preference_1");
+            if (s.isChecked()) {
+
+            }
+            Toast.makeText(getActivity(), "isChecked : " + s.isChecked(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public static class MessagesFragment extends PreferenceFragmentCompat {
+    public static class LoadFragment extends PreferenceFragmentCompat {
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.messages_preferences, rootKey);
+            setPreferencesFromResource(R.xml.load_preferences, rootKey);
+            PreferenceScreen preferenceScreen = getPreferenceScreen();
+
         }
     }
 
