@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,14 +70,22 @@ public class MainActivity extends AppCompatActivity {
         ExpenseDb e = new ExpenseDb();
 
         expenses = e.getExpenses(getApplicationContext());
+        ArrayList<Expense> todayExp = new ArrayList<>();
         double total = 0;
         for (Expense expense : expenses) {
             total += expense.getPrice();
+           // todo replace with date comparison after poc, exclude future purchases
+            if (expense.getStringCreatedAt().equals(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString())) {
+                todayExp.add(expense);
+            }
         }
 
         TextView totalV = findViewById(R.id.totalExpenses);
-        totalV.setText("-" + total + " RON");
-        expenseAdapter = new ExpenseAdapter(expenses);
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+        // sqlite precision bug
+        totalV.setText("-" + String.format("%.2f", total)  + " RON");
+        expenseAdapter = new ExpenseAdapter(todayExp);
 
         TextView currentDate = findViewById(R.id.currentDate);
         currentDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString());
