@@ -31,4 +31,9 @@
     <string name="title_activity_budget">Budget</string>
     <string name="title_activity_reports">ReportsActivity</string>
     <string name="load_data_header">Load data</string>
+
+
+    <string name="dash">-</string>
+    <string name="scrollViewStart">START OF SCROLLVIEW</string>
+    <string name="scrollViewEnd">END OF SCROLLVIEW</string>
 </resources>
