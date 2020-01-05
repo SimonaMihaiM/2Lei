@@ -74,17 +74,14 @@ public class MainActivity extends AppCompatActivity {
         double total = 0;
         for (Expense expense : expenses) {
             total += expense.getPrice();
-           // todo replace with date comparison after poc, exclude future purchases
-            if (expense.getStringCreatedAt().equals(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString())) {
-                todayExp.add(expense);
-            }
+            todayExp.add(expense);
         }
 
         TextView totalV = findViewById(R.id.totalExpenses);
         NumberFormat formatter = new DecimalFormat("#0.00");
 
         // sqlite precision bug
-        totalV.setText("-" + String.format("%.2f", total)  + " RON");
+        totalV.setText(String.format("%.2f", total) + " RON");
         expenseAdapter = new ExpenseAdapter(todayExp);
 
         TextView currentDate = findViewById(R.id.currentDate);
@@ -144,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
         databaseManager.open();
         databaseManager.deleteAll();
-        for(Expense expense : expenses){
+        for (Expense expense : expenses) {
             databaseManager.insert(expense);
         }
 
