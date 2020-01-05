@@ -60,7 +60,7 @@ public class Expense {
 
 
     public String getStringPrice() {
-        return "-" + price + " RON";
+        return "" + price + " RON";
     }
 
     public int getId() {
