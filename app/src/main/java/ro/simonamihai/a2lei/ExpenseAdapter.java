@@ -49,11 +49,15 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.itemView.findViewById(R.id.buttonDeleteExpense).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.cv.setVisibility(View.INVISIBLE);
+                expenseList.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                notifyItemRangeChanged(holder.getAdapterPosition(), expenseList.size());
+//                holder.cv.setVisibility(View.INVISIBLE);
                 DatabaseManager databaseManager = new DatabaseManager(context);
                 databaseManager.open();
                 databaseManager.delete(expense);
                 databaseManager.close();
+
             }
         });
 
