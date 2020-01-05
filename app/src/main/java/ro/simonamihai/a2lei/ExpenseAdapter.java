@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Expense;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
@@ -20,6 +22,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
     public ExpenseAdapter(List<Expense> expenseList) {
         this.expenseList = expenseList;
+
     }
 
     @Override
@@ -31,8 +34,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        Expense expense = expenseList.get(position);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final Expense expense = expenseList.get(position);
 
         holder.textExpenseName.setText(expense.getName());
         holder.textExpenseDate.setText(expense.getStringCreatedAt());
@@ -43,7 +46,16 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                 Toast.makeText(context, "The position is:" + position, Toast.LENGTH_SHORT).show();
             }
         });
-
+        holder.itemView.findViewById(R.id.buttonDeleteExpense).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.cv.setVisibility(View.INVISIBLE);
+                DatabaseManager databaseManager = new DatabaseManager(context);
+                databaseManager.open();
+                databaseManager.delete(expense);
+                databaseManager.close();
+            }
+        });
 
     }
 

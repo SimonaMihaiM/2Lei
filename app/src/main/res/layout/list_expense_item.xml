@@ -17,7 +17,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/textExpenseName"
             app:layout_constraintTop_toTopOf="@+id/textExpenseName">
 
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/expense_name"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -38,33 +38,44 @@
                 android:id="@+id/textExpensePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/expense_price"
                 android:textColor="@color/expenseMainRed"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.959"
+                app:layout_constraintHorizontal_bias="0.082"
                 app:layout_constraintStart_toEndOf="@+id/textExpenseName"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_conversion_absoluteHeight="24dp"
                 tools:layout_conversion_absoluteWidth="147dp" />
 
-            <TextView
-                android:id="@+id/textExpenseDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="52dp"
-                android:alpha="100"
-                android:text="Date"
-                android:textColor="#919191"
-                android:textSize="12sp"
+            <Button
+                android:id="@+id/buttonDeleteExpense"
+                android:layout_width="28dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorAccent"
+                android:drawableLeft="@android:drawable/ic_menu_delete"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textExpensePrice" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textExpensePrice"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/textExpenseDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginEnd="76dp"
+        android:alpha="100"
+        android:text="Date"
+        android:textColor="#919191"
+        android:textSize="12sp" />
 
 </LinearLayout>

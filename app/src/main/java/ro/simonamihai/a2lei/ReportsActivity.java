@@ -146,7 +146,7 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
 //            public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-//            }
+//            }android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString()))
 //        });
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
