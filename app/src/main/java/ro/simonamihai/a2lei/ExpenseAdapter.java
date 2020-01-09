@@ -1,6 +1,7 @@
 package ro.simonamihai.a2lei;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,15 +53,21 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                 expenseList.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
                 notifyItemRangeChanged(holder.getAdapterPosition(), expenseList.size());
-//                holder.cv.setVisibility(View.INVISIBLE);
                 DatabaseManager databaseManager = new DatabaseManager(context);
                 databaseManager.open();
                 databaseManager.delete(expense);
                 databaseManager.close();
-
             }
         });
-
+        holder.itemView.findViewById(R.id.buttonEditExpense).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Implement update functionality
+                Intent intent = new Intent(context, ExpenseActivity.class);
+                intent.putExtra("updateId", expense.getId());
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
