@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -22,10 +23,13 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.model.GradientColor;
 import com.github.mikephil.charting.utils.MPPointF;
@@ -44,7 +48,7 @@ import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
 public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,
         OnChartValueSelectedListener {
-    private BarChart chart;
+    private LineChart chart;
     private SeekBar seekBarX, seekBarY;
     private TextView tvX, tvY;
 
@@ -55,7 +59,6 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         setContentView(R.layout.activity_reports);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         /**/
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -76,9 +79,6 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         chart = findViewById(R.id.chart1);
         chart.setOnChartValueSelectedListener(this);
 
-        chart.setDrawBarShadow(false);
-        chart.setDrawValueAboveBar(true);
-
         chart.getDescription().setEnabled(false);
 
         // if more than 60 entries are displayed in the chart, no values will be
@@ -89,33 +89,22 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         chart.setPinchZoom(false);
 
         chart.setDrawGridBackground(false);
-        // chart.setDrawYLabels(false);
-
-//        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setTypeface(tfLight);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(7);
-//        xAxis.setValueFormatter(xAxisFormatter);
-
-//        ValueFormatter custom = new MyValueFormatter("$");
 
         YAxis leftAxis = chart.getAxisLeft();
-//        leftAxis.setTypeface(tfLight);
         leftAxis.setLabelCount(8, false);
-//        leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setDrawGridLines(false);
-//        rightAxis.setTypeface(tfLight);
         rightAxis.setLabelCount(8, false);
-//        rightAxis.setValueFormatter(custom);
         rightAxis.setSpaceTop(15f);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
@@ -129,26 +118,9 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
 
-//        XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
-//        mv.setChartView(chart); // For bounds control
-//        chart.setMarker(mv); // Set the marker to the chart
-
         // setting data
         seekBarY.setProgress(50);
         seekBarX.setProgress(12);
-
-        // chart.setDrawLegend(false);
-
-        /**/
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString()))
-//        });
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setData(int count, float range) {
@@ -157,67 +129,27 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
 
         float start = 1f;
 
-        ArrayList<BarEntry> values = new ArrayList<>();
+        ArrayList<Entry> values = new ArrayList<>();
         getApplicationContext();
         for (int i = (int) start; i < start + count; i++) {
-//            float val = (float) (Math.random() * (range + 1));
-//
-//            if (Math.random() * 100 < 25) {
-//                values.add(new BarEntry(i, val, getResources().getDrawable(R.drawable.star)));
-//            } else {
-                values.add(new BarEntry(i, expenses.get(i).getCreatedAt().getTime()));
-//            }
+                values.add(new Entry(i, (float) expenses.get(i).getPrice()));
+
         }
 
-        BarDataSet set1;
+        LineDataSet set1;
 
-        if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-
-        } else {
-            set1 = new BarDataSet(values, "The year 2019");
+            set1 = new LineDataSet(values, "The year 2019");
 
             set1.setDrawIcons(false);
 
-//            set1.setColors(ColorTemplate.MATERIAL_COLORS);
-
-            /*int startColor = ContextCompat.getColor(this, android.R.color.holo_blue_dark);
-            int endColor = ContextCompat.getColor(this, android.R.color.holo_blue_bright);
-            set1.setGradientColor(startColor, endColor);*/
-
-            int startColor1 = ContextCompat.getColor(this, android.R.color.holo_orange_light);
-            int startColor2 = ContextCompat.getColor(this, android.R.color.holo_blue_light);
-            int startColor3 = ContextCompat.getColor(this, android.R.color.holo_orange_light);
-            int startColor4 = ContextCompat.getColor(this, android.R.color.holo_green_light);
-            int startColor5 = ContextCompat.getColor(this, android.R.color.holo_red_light);
-            int endColor1 = ContextCompat.getColor(this, android.R.color.holo_blue_dark);
-            int endColor2 = ContextCompat.getColor(this, android.R.color.holo_purple);
-            int endColor3 = ContextCompat.getColor(this, android.R.color.holo_green_dark);
-            int endColor4 = ContextCompat.getColor(this, android.R.color.holo_red_dark);
-            int endColor5 = ContextCompat.getColor(this, android.R.color.holo_orange_dark);
-
-            List<GradientColor> gradientColors = new ArrayList<>();
-            gradientColors.add(new GradientColor(startColor1, endColor1));
-            gradientColors.add(new GradientColor(startColor2, endColor2));
-            gradientColors.add(new GradientColor(startColor3, endColor3));
-            gradientColors.add(new GradientColor(startColor4, endColor4));
-            gradientColors.add(new GradientColor(startColor5, endColor5));
-
-            set1.setGradientColors(gradientColors);
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
 
-            BarData data = new BarData(dataSets);
+            LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
-            data.setBarWidth(0.9f);
 
             chart.setData(data);
-        }
+
     }
 
 
@@ -261,7 +193,7 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
             return;
 
         RectF bounds = onValueSelectedRectF;
-        chart.getBarBounds((BarEntry) e, bounds);
+//        chart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = chart.getPosition(e, YAxis.AxisDependency.LEFT);
 
         Log.i("bounds", bounds.toString());
