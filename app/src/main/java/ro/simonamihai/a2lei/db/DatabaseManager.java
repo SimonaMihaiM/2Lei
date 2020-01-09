@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.Date;
+
 import ro.simonamihai.a2lei.model.Expense;
 
 public class DatabaseManager {
@@ -53,6 +55,21 @@ public class DatabaseManager {
         contentValues.put(DatabaseHelper.DATE, expense.getCreatedAt().getTime());
         contentValues.put(DatabaseHelper.PRICE, expense.getPrice());
         return database.update(DatabaseHelper.TABLE_NAME, contentValues, DatabaseHelper.ID + " = " + expense.getId(), null);
+    }
+
+    public Expense findById(int uid){
+        String[] columns = new String[]{DatabaseHelper.ID, DatabaseHelper.NAME, DatabaseHelper.DATE, DatabaseHelper.PRICE};
+        Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, columns, "id="+uid, null, null, null, null);
+        cursor.moveToNext();
+        int id = cursor.getInt(
+                cursor.getColumnIndexOrThrow(DatabaseHelper.ID));
+        String name = cursor.getString(
+                cursor.getColumnIndexOrThrow(DatabaseHelper.NAME));
+        Date createdAt = new Date(cursor.getLong(
+                cursor.getColumnIndexOrThrow(DatabaseHelper.DATE)));
+        double price = cursor.getDouble(
+                cursor.getColumnIndexOrThrow(DatabaseHelper.PRICE));
+        return new Expense(id, createdAt, name, price);
     }
 
     public void delete(Expense expense) {
