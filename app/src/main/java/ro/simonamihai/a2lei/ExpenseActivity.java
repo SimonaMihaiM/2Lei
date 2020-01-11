@@ -7,13 +7,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +27,12 @@ import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Expense;
 import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class ExpenseActivity extends AppCompatActivity {
+    private Spinner spinner;
+    private CalendarView calendar;
+    private Date selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +41,7 @@ public class ExpenseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerList);
+        spinner = (Spinner) findViewById(R.id.spinnerList);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.category_entries, android.R.layout.simple_spinner_item);
@@ -41,6 +50,25 @@ public class ExpenseActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        calendar = findViewById(R.id.calendar_view);
+        calendar.setDate((new Date()).getTime());
+
+        // Calendar not pass beyond today - Gandalf style
+        // calendar.setMaxDate((new Date()).getTime());
+
+        calendar.setVisibility(View.INVISIBLE);
+
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month,
+                                            int dayOfMonth) {
+                try {
+                    selectedDate = new SimpleDateFormat("dd/MM/yyyy").parse(dayOfMonth + "/" + (month+1) + "/" + year);
+                } catch (ParseException a) {
+                    // to implement
+                }
+            }
+        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getIncomingIntent();
@@ -52,6 +80,8 @@ public class ExpenseActivity extends AppCompatActivity {
         if (getIntent().hasExtra("updateId")) {
             final int updateId= getIntent().getIntExtra("updateId",0);
 
+            calendar.setVisibility(View.VISIBLE);
+
             DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
             databaseManager.open();
             Expense e = databaseManager.findById(updateId);
@@ -62,12 +92,14 @@ public class ExpenseActivity extends AppCompatActivity {
             int categoryIndex = categories.indexOf(e.getName());
             expenseName.setSelection(categoryIndex);
             expensePrice.setText(""+ e.getPrice());
+            calendar.setDate(e.getCreatedAt().getTime());
             btnInsertExpense.setText("Update");
             btnInsertExpense.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Spinner expenseName = findViewById(R.id.spinnerList);
                     TextView expensePrice = findViewById(R.id.inserExpensePrice);
+
 
                     // Expense expense = new Expense(new Date(), expenseName.getText().toString(), Double.parseDouble(expensePrice.getText().toString()));
 
@@ -77,6 +109,9 @@ public class ExpenseActivity extends AppCompatActivity {
                     Expense e = databaseManager.findById(updateId);
                     e.setName(expenseName.getSelectedItem().toString());
                     e.setPrice(Double.parseDouble(expensePrice.getText().toString()));
+
+                    e.setCreatedAt(new Date(selectedDate.getTime()));
+                    Log.d("Datae",selectedDate.getTime() + " " + e.getCreatedAt().getTime());
                     databaseManager.update(e);
                     databaseManager.close();
                     Snackbar.make(view, "Inserted", Snackbar.LENGTH_LONG)
