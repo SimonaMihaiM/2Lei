@@ -43,14 +43,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import ro.simonamihai.a2lei.db.DatabaseManager;
+import ro.simonamihai.a2lei.model.DayAxisValueFormatter;
 import ro.simonamihai.a2lei.model.Expense;
 import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
-public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,
-        OnChartValueSelectedListener {
+public class ReportsActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     private LineChart chart;
-    private SeekBar seekBarX, seekBarY;
-    private TextView tvX, tvY;
+
 
 
     @Override
@@ -66,15 +65,6 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         setContentView(R.layout.activity_barchart);
 
         setTitle("BarChartActivity");
-
-        tvX = findViewById(R.id.tvXMax);
-        tvY = findViewById(R.id.tvYMax);
-
-        seekBarX = findViewById(R.id.seekBar1);
-        seekBarY = findViewById(R.id.seekBar2);
-
-        seekBarY.setOnSeekBarChangeListener(this);
-        seekBarX.setOnSeekBarChangeListener(this);
 
         chart = findViewById(R.id.chart1);
         chart.setOnChartValueSelectedListener(this);
@@ -95,12 +85,13 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(7);
+        xAxis.setValueFormatter(new DayAxisValueFormatter(chart));
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(8, false);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+//        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setDrawGridLines(false);
@@ -117,10 +108,7 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         l.setFormSize(9f);
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
-
-        // setting data
-        seekBarY.setProgress(50);
-        seekBarX.setProgress(12);
+        setData(1,1);
     }
 
     private void setData(int count, float range) {
@@ -130,25 +118,24 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         float start = 1f;
 
         ArrayList<Entry> values = new ArrayList<>();
-        getApplicationContext();
-        for (int i = (int) start; i < start + count; i++) {
-                values.add(new Entry(i, (float) expenses.get(i).getPrice()));
 
+        for (Expense expense : expenses) {
+            values.add(new Entry(expense.getCreatedAt().getTime(), (float) expense.getPrice()));
         }
 
         LineDataSet set1;
 
-            set1 = new LineDataSet(values, "The year 2019");
+        set1 = new LineDataSet(values, "The year 2019");
 
-            set1.setDrawIcons(false);
+        set1.setDrawIcons(false);
 
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
 
-            LineData data = new LineData(dataSets);
-            data.setValueTextSize(10f);
+        LineData data = new LineData(dataSets);
+        data.setValueTextSize(10f);
 
-            chart.setData(data);
+        chart.setData(data);
 
     }
 
@@ -167,22 +154,6 @@ public class ReportsActivity extends AppCompatActivity implements SeekBar.OnSeek
         }
         return true;
     }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-        tvX.setText(String.valueOf(seekBarX.getProgress()));
-        tvY.setText(String.valueOf(seekBarY.getProgress()));
-
-        setData(seekBarX.getProgress(), seekBarY.getProgress());
-        chart.invalidate();
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
 
     private final RectF onValueSelectedRectF = new RectF();
 
