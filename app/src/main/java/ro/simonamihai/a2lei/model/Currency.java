@@ -6,6 +6,7 @@ public class Currency {
 
     private ArrayList<String> availableCurrencies;
     private ArrayList<String> currencySymbol;
+
     public Currency() {
         this.availableCurrencies = new ArrayList<String>();
         this.currencySymbol = new ArrayList<String>();
@@ -29,6 +30,10 @@ public class Currency {
             return this.availableCurrencies.get(index);
         }
         return "";
+    }
+
+    public int getCurrencyIndex(String name) {
+        return this.availableCurrencies.indexOf(name);
     }
 
     public String getCurrencySymbolIndex(int index) {

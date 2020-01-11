@@ -39,13 +39,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.showMainScreen();
 
-        SharedPreferences sharedPreferences = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putInt("currencyId",1);
-        editor.apply();
+        if (sharedPreferences.getInt("currencyId", -1) == -1) {
+            editor.putInt("currencyId", 0);
+            editor.apply();
+        }
+        this.showMainScreen();
     }
 
     public void showPopup(View v) {
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         String currentMonth = android.text.format.DateFormat.format("yyyy-MM", new Date()).toString();
         for (Expense expense : expenses) {
 
-            if (android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString().equals(currentMonth)){
+            if (android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString().equals(currentMonth)) {
                 total += expense.getPrice();
 
             }
@@ -96,15 +98,14 @@ public class MainActivity extends AppCompatActivity {
         TextView totalV = findViewById(R.id.totalExpenses);
         NumberFormat formatter = new DecimalFormat("#0.00");
 
-        // sqlite precision bug
+
         Currency currency = new Currency();
         SharedPreferences s = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
-        int currencyIndex = s.getInt("currencyId",2);
-        totalV.setText(String.format("%.2f", total) + currency.getCurrencySymbolIndex(currencyIndex));
+        int currencyIndex = s.getInt("currencyId", 2);
+        totalV.setText(currency.getCurrencySymbolIndex(currencyIndex)+" "+String.format("%.2f", total));
         expenseAdapter = new ExpenseAdapter(todayExp);
 
         TextView currentDate = findViewById(R.id.currentDate);
-//        currentDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString());
         currentDate.setText(currentMonth);
         recyclerView = findViewById(R.id.res);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

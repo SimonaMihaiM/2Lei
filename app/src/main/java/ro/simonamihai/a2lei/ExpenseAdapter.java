@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,13 +40,14 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Expense expense = expenseList.get(position);
-        SharedPreferences s = context.getSharedPreferences("currency_id", MODE_PRIVATE);
+        SharedPreferences s = context.getApplicationContext().getSharedPreferences("currency_id", MODE_PRIVATE);
         int currencyIndex = s.getInt("currencyId",2);
 
         Currency currency = new Currency();
         holder.textExpenseName.setText(expense.getName());
         holder.textExpenseDate.setText(expense.getStringCreatedAt());
-        holder.textExpensePrice.setText(expense.getStringPrice() + currency.getCurrencySymbolIndex(currencyIndex));
+        String priceWithCurrency = currency.getCurrencySymbolIndex(currencyIndex) +" "+ expense.getPrice();
+        holder.textExpensePrice.setText(priceWithCurrency);
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +69,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.itemView.findViewById(R.id.buttonEditExpense).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Implement update functionality
                 Intent intent = new Intent(context, ExpenseActivity.class);
                 intent.putExtra("updateId", expense.getId());
                 view.getContext().startActivity(intent);
