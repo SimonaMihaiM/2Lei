@@ -1,6 +1,7 @@
 package ro.simonamihai.a2lei;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,11 +25,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ro.simonamihai.a2lei.db.DatabaseManager;
+import ro.simonamihai.a2lei.model.Currency;
 import ro.simonamihai.a2lei.model.Expense;
 import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String CURRENCY_ID = "currency_id";
     RecyclerView recyclerView;
     ExpenseAdapter expenseAdapter;
     ArrayList<Expense> expenses;
@@ -37,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.showMainScreen();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt("currencyId",1);
+        editor.apply();
     }
 
     public void showPopup(View v) {
@@ -70,23 +79,33 @@ public class MainActivity extends AppCompatActivity {
         ExpenseDb e = new ExpenseDb();
 
         expenses = e.getExpenses(getApplicationContext());
+
         ArrayList<Expense> todayExp = new ArrayList<>();
         double total = 0;
+        String currentMonth = android.text.format.DateFormat.format("yyyy-MM", new Date()).toString();
         for (Expense expense : expenses) {
-            total += expense.getPrice();
+
+            if (android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString().equals(currentMonth)){
+                total += expense.getPrice();
+
+            }
             todayExp.add(expense);
+
         }
 
         TextView totalV = findViewById(R.id.totalExpenses);
         NumberFormat formatter = new DecimalFormat("#0.00");
 
         // sqlite precision bug
-        totalV.setText(String.format("%.2f", total) + " RON");
+        Currency currency = new Currency();
+        SharedPreferences s = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
+        int currencyIndex = s.getInt("currencyId",2);
+        totalV.setText(String.format("%.2f", total) + currency.getCurrencySymbolIndex(currencyIndex));
         expenseAdapter = new ExpenseAdapter(todayExp);
 
         TextView currentDate = findViewById(R.id.currentDate);
-        currentDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString());
-
+//        currentDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date()).toString());
+        currentDate.setText(currentMonth);
         recyclerView = findViewById(R.id.res);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());

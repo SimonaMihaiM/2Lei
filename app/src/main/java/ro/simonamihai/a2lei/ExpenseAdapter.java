@@ -2,6 +2,7 @@ package ro.simonamihai.a2lei;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,10 @@ import java.util.List;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import ro.simonamihai.a2lei.db.DatabaseManager;
+import ro.simonamihai.a2lei.model.Currency;
 import ro.simonamihai.a2lei.model.Expense;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
@@ -37,10 +41,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Expense expense = expenseList.get(position);
+        SharedPreferences s = context.getSharedPreferences("currency_id", MODE_PRIVATE);
+        int currencyIndex = s.getInt("currencyId",2);
 
+        Currency currency = new Currency();
         holder.textExpenseName.setText(expense.getName());
         holder.textExpenseDate.setText(expense.getStringCreatedAt());
-        holder.textExpensePrice.setText(expense.getStringPrice());
+        holder.textExpensePrice.setText(expense.getStringPrice() + currency.getCurrencySymbolIndex(currencyIndex));
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
