@@ -52,6 +52,7 @@ public class ExpenseActivity extends AppCompatActivity {
 
         calendar = findViewById(R.id.calendar_view);
         calendar.setDate((new Date()).getTime());
+        selectedDate = new Date();
 
         // Calendar not pass beyond today - Gandalf style
         // calendar.setMaxDate((new Date()).getTime());
@@ -93,6 +94,7 @@ public class ExpenseActivity extends AppCompatActivity {
             expenseName.setSelection(categoryIndex);
             expensePrice.setText(""+ e.getPrice());
             calendar.setDate(e.getCreatedAt().getTime());
+            selectedDate = e.getCreatedAt();
             btnInsertExpense.setText("Update");
             btnInsertExpense.setOnClickListener(new View.OnClickListener() {
                 @Override
