@@ -2,7 +2,9 @@ package ro.simonamihai.a2lei;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -25,6 +28,9 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -46,11 +52,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import ro.simonamihai.a2lei.db.DatabaseManager;
+import ro.simonamihai.a2lei.model.Currency;
 import ro.simonamihai.a2lei.model.DayAxisValueFormatter;
 import ro.simonamihai.a2lei.model.Expense;
 import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
-public class ReportsActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+public class ReportsActivity extends AppCompatActivity {
     private LineChart chart;
 
 
@@ -62,71 +69,29 @@ public class ReportsActivity extends AppCompatActivity implements OnChartValueSe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /**/
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_barchart);
 
-        setTitle("Reports");
-
-        chart = findViewById(R.id.chart1);
-        chart.setOnChartValueSelectedListener(this);
-
-        chart.getDescription().setEnabled(false);
-
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-
-        // scaling can now only be done on x- and y-axis separately
-        chart.setPinchZoom(false);
-
-        chart.setDrawGridBackground(false);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setLabelRotationAngle(90);
-//        xAxis.setGranularity(1f); // only intervals of 1 day
-//        xAxis.setLabelCount(7);
-//        xAxis.setValueFormatter(new DayAxisValueFormatter(chart));
-
-        YAxis leftAxis = chart.getAxisLeft();
-//        leftAxis.setLabelCount(8, false);
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(15f);
-//        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        PieChart pieChart = findViewById(R.id.chart0);
 
 
-
-        Legend l = chart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setForm(Legend.LegendForm.SQUARE);
-        l.setFormSize(9f);
-        l.setTextSize(11f);
-//        l.setXEntrySpace(4f);
-        setData(8,8);
-    }
-
-    private void setData(int count, float range) {
-
+        int[] colors = new int[] {
+                Color.parseColor("#E91E63"),
+                Color.parseColor("#9C27B0"),
+                Color.parseColor("#673AB7"),
+                Color.parseColor("#3F51B5"),
+                Color.parseColor("#2196F3"),
+                Color.parseColor("#f44336"),
+                Color.parseColor("#00BCD4"),
+                Color.parseColor("#4CAF50")
+                };
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
         ArrayList<Expense> expenses = (new ExpenseDb()).getExpenses(getApplicationContext());
-
-        float start = 1f;
-
-        ArrayList<Entry> values = new ArrayList<>();
-//
-//        for (int i=0; i<expenses.size();i++) {
-//            values.add(new Entry(i, (float) expenses.get(i).getPrice()));
-//        }
-
-        HashMap<Integer, Float> hmap = new HashMap<Integer, Float>();
-
+        HashMap<String, Float> hmap = new HashMap<String, Float>();
         for (Expense expense : expenses) {
 
-            Integer date = Integer.parseInt(android.text.format.DateFormat.format("yyyyMM", expense.getCreatedAt()).toString());
+            String date = android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString();
             if (hmap.containsKey(date)) {
                 hmap.put(date, (float)expense.getPrice() + hmap.get(date));
             } else {
@@ -135,28 +100,33 @@ public class ReportsActivity extends AppCompatActivity implements OnChartValueSe
 
         }
 
-
-        for (Integer key:hmap.keySet()) {
-            values.add(new Entry(key , hmap.get(key)));
+        SharedPreferences s = getSharedPreferences("currency_id", MODE_PRIVATE);
+        final int currencyIndex = s.getInt("currencyId",2);
+        for (String key:hmap.keySet()) {
+            pieEntries.add(new PieEntry(hmap.get(key), key));
         }
 
-        Collections.sort(values, new EntryXComparator());
-        LineDataSet set1;
 
-        set1 = new LineDataSet(values, "");
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "a");
+        pieDataSet.setColors(colors);
+        PieData pd = new PieData(pieDataSet);
+        pieChart.setData(pd);
 
-        set1.setDrawIcons(false);
+        pieDataSet.setValueTextSize(14f);
+        pieDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                Currency currency = new Currency();
+                return currency.getCurrencySymbolIndex(currencyIndex) + " " + value;
+            }
+        });
 
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
 
-        LineData data = new LineData(dataSets);
-        data.setValueTextSize(10f);
+        pieChart.invalidate();
+        setTitle("Reports");
 
-        chart.setData(data);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,37 +134,4 @@ public class ReportsActivity extends AppCompatActivity implements OnChartValueSe
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            //
-        }
-        return true;
-    }
-
-    private final RectF onValueSelectedRectF = new RectF();
-
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-
-        if (e == null)
-            return;
-
-        RectF bounds = onValueSelectedRectF;
-//        chart.getBarBounds((BarEntry) e, bounds);
-        MPPointF position = chart.getPosition(e, YAxis.AxisDependency.LEFT);
-
-        Log.i("bounds", bounds.toString());
-        Log.i("position", position.toString());
-
-        Log.i("x-index",
-                "low: " + chart.getLowestVisibleX() + ", high: "
-                        + chart.getHighestVisibleX());
-
-        MPPointF.recycleInstance(position);
-    }
-
-    @Override
-    public void onNothingSelected() { }
 }
