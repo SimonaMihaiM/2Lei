@@ -42,7 +42,7 @@ public class DatabaseManager {
 
     public Cursor fetch() {
         String[] columns = new String[]{DatabaseHelper.ID, DatabaseHelper.NAME, DatabaseHelper.DATE, DatabaseHelper.PRICE};
-        Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, columns, null, null, null, null, null);
+        Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, columns, null, null, null, null, DatabaseHelper.DATE + " DESC");
         if (cursor != null) {
             cursor.moveToFirst();
         }
