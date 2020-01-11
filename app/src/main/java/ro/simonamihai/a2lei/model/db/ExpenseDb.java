@@ -50,17 +50,19 @@ public class ExpenseDb extends Expense {
         dbManager = new DatabaseManager(context);
         dbManager.open();
         Cursor cursor = dbManager.fetch();
-         do{
-            int id = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(DatabaseHelper.ID));
-            String name = cursor.getString(
-                    cursor.getColumnIndexOrThrow(DatabaseHelper.NAME));
-            Date createdAt = new Date(cursor.getLong(
-                    cursor.getColumnIndexOrThrow(DatabaseHelper.DATE)));
-            double price = cursor.getDouble(
-                    cursor.getColumnIndexOrThrow(DatabaseHelper.PRICE));
-            values.add(new Expense(id, createdAt, name, price));
-        } while (cursor.moveToNext());
+        if (cursor.getCount()>0) {
+            do {
+                int id = cursor.getInt(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.ID));
+                String name = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.NAME));
+                Date createdAt = new Date(cursor.getLong(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.DATE)));
+                double price = cursor.getDouble(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.PRICE));
+                values.add(new Expense(id, createdAt, name, price));
+            } while (cursor.moveToNext());
+        }
         cursor.close();
         dbManager.close();
 
