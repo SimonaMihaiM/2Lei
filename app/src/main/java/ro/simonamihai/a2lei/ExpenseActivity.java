@@ -4,12 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,14 +32,21 @@ public class ExpenseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerList);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_entries, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getIncomingIntent();
-
-
     }
 
     public void getIncomingIntent(){
-        Log.d("", "a");
         Button btnInsertExpense = findViewById(R.id.insertExpenseBtn);
 
         if (getIntent().hasExtra("updateId")) {
@@ -43,15 +56,17 @@ public class ExpenseActivity extends AppCompatActivity {
             databaseManager.open();
             Expense e = databaseManager.findById(updateId);
             databaseManager.close();
-            TextView expenseName = findViewById(R.id.insertExpenseName);
+            Spinner expenseName = findViewById(R.id.spinnerList);
             TextView expensePrice = findViewById(R.id.inserExpensePrice);
-            expenseName.setText(e.getName());
+            List<String> categories = Arrays.asList(getResources().getStringArray(R.array.category_entries));
+            int categoryIndex = categories.indexOf(e.getName());
+            expenseName.setSelection(categoryIndex);
             expensePrice.setText(""+ e.getPrice());
             btnInsertExpense.setText("Update");
             btnInsertExpense.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TextView expenseName = findViewById(R.id.insertExpenseName);
+                    Spinner expenseName = findViewById(R.id.spinnerList);
                     TextView expensePrice = findViewById(R.id.inserExpensePrice);
 
                     // Expense expense = new Expense(new Date(), expenseName.getText().toString(), Double.parseDouble(expensePrice.getText().toString()));
@@ -60,7 +75,7 @@ public class ExpenseActivity extends AppCompatActivity {
                     DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
                     databaseManager.open();
                     Expense e = databaseManager.findById(updateId);
-                    e.setName(expenseName.getText().toString());
+                    e.setName(expenseName.getSelectedItem().toString());
                     e.setPrice(Double.parseDouble(expensePrice.getText().toString()));
                     databaseManager.update(e);
                     databaseManager.close();
@@ -71,13 +86,14 @@ public class ExpenseActivity extends AppCompatActivity {
                 }
             });
         } else {
+
             btnInsertExpense.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TextView expenseName = findViewById(R.id.insertExpenseName);
+                    Spinner expenseName = findViewById(R.id.spinnerList);
                     TextView expensePrice = findViewById(R.id.inserExpensePrice);
 
-                    Expense expense = new Expense(new Date(), expenseName.getText().toString(), Double.parseDouble(expensePrice.getText().toString()));
+                    Expense expense = new Expense(new Date(), expenseName.getSelectedItem().toString(), Double.parseDouble(expensePrice.getText().toString()));
 
                     DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
                     databaseManager.open();

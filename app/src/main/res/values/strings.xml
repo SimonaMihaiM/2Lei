@@ -13,9 +13,6 @@
     <string name="add_expense_btn_label">Add expense</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
@@ -27,9 +24,9 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_activity_expense">ExpenseActivity</string>
+    <string name="title_activity_expense">Expense</string>
     <string name="title_activity_budget">Budget</string>
-    <string name="title_activity_reports">ReportsActivity</string>
+    <string name="title_activity_reports">Reports</string>
     <string name="load_data_header">Load data</string>
 
 
@@ -37,4 +34,6 @@
     <string name="scrollViewStart">START OF SCROLLVIEW</string>
     <string name="scrollViewEnd">END OF SCROLLVIEW</string>
     <string name="buttonDeleteExpense">Delete</string>
+    <string name="insert">Insert</string>
+    <string name="update">Update</string>
 </resources>
