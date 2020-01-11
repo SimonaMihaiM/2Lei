@@ -50,7 +50,7 @@ public class ExpenseDb extends Expense {
         dbManager = new DatabaseManager(context);
         dbManager.open();
         Cursor cursor = dbManager.fetch();
-        while (cursor.moveToNext()) {
+         do{
             int id = cursor.getInt(
                     cursor.getColumnIndexOrThrow(DatabaseHelper.ID));
             String name = cursor.getString(
@@ -60,7 +60,7 @@ public class ExpenseDb extends Expense {
             double price = cursor.getDouble(
                     cursor.getColumnIndexOrThrow(DatabaseHelper.PRICE));
             values.add(new Expense(id, createdAt, name, price));
-        }
+        } while (cursor.moveToNext());
         cursor.close();
         dbManager.close();
 
