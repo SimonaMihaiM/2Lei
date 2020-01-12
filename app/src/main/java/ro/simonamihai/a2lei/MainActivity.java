@@ -154,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.load_test_data) {
                     loadTestData();
                 }
+                if (item.getItemId() == R.id.delete_data) {
+                    deleteData();
+                }
                 return true;
             }
         });
@@ -187,5 +190,11 @@ public class MainActivity extends AppCompatActivity {
         showMainScreen();
     }
 
+    public void deleteData() {
+        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+        databaseManager.deleteAll();
+        databaseManager.close();
+        showMainScreen();
+    }
 
 }
