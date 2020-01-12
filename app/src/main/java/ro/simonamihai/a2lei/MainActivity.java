@@ -61,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_new_expense) {
                     showNewExpenseScreen();
                 }
-                if (item.getItemId() == R.id.action_new_budget) {
-                    showNewBudgetScreen();
-                }
                 if (item.getItemId() == R.id.load_test_data) {
                     loadTestData();
                 }
@@ -131,11 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void showSettingsScreen() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void showNewBudgetScreen() {
-        Intent intent = new Intent(this, BudgetActivity.class);
         startActivity(intent);
     }
 
