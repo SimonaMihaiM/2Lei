@@ -14,8 +14,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -27,88 +25,44 @@ import androidx.recyclerview.widget.RecyclerView;
 import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Currency;
 import ro.simonamihai.a2lei.model.Expense;
-import ro.simonamihai.a2lei.model.db.ExpenseDb;
+import ro.simonamihai.a2lei.model.db.ExpenseFile;
 
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String CURRENCY_ID = "currency_id";
-    RecyclerView recyclerView;
-    ExpenseAdapter expenseAdapter;
-    ArrayList<Expense> expenses;
+
+    private ArrayList<Expense> expenses;
+
+    private TextView currentDate;
+    private TextView totalExpenses;
+    private RecyclerView recyclerView;
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        if (!sharedPreferences.contains("currencyId")) {
-            editor.putInt("currencyId", Currency.CURRENCY_RON);
-            editor.apply();
-        }
-        this.showMainScreen();
-    }
-
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_actions, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.action_new_expense) {
-                    showNewExpenseScreen();
-                }
-                if (item.getItemId() == R.id.load_test_data) {
-                    loadTestData();
-                }
-                return true;
-            }
-        });
-        popup.show();
-    }
-
-    public void showMainScreen() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ExpenseDb e = new ExpenseDb();
+        currentDate = findViewById(R.id.currentDate);
+        totalExpenses = findViewById(R.id.totalExpenses);
 
-        expenses = e.getExpenses(getApplicationContext());
-
-        ArrayList<Expense> todayExp = new ArrayList<>();
-        double total = 0;
-        String currentMonth = android.text.format.DateFormat.format("yyyy-MM", new Date()).toString();
-        for (Expense expense : expenses) {
-
-            if (android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString().equals(currentMonth)) {
-                total += expense.getPrice();
-
-            }
-            todayExp.add(expense);
-
-        }
-
-        TextView totalV = findViewById(R.id.totalExpenses);
-        NumberFormat formatter = new DecimalFormat("#0.00");
-
-
-        Currency currency = new Currency();
-        SharedPreferences s = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
-        int currencyIndex = s.getInt("currencyId", Currency.CURRENCY_RON);
-        totalV.setText(currency.getSymbolForIndex(currencyIndex)+" "+String.format("%.2f", total));
-        expenseAdapter = new ExpenseAdapter(todayExp);
-
-        TextView currentDate = findViewById(R.id.currentDate);
-        currentDate.setText(currentMonth);
         recyclerView = findViewById(R.id.res);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(expenseAdapter);
 
+        sharedPreferences = getApplicationContext().getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
+
+        if (!sharedPreferences.contains("currencyId")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("currencyId", Currency.CURRENCY_RON);
+            editor.apply();
+        }
+
+        this.showMainScreen();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -119,46 +73,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void showMainScreen() {
+        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+        expenses = databaseManager.findAll();
+
+        double total = 0;
+        String currentMonth = android.text.format.DateFormat.format("yyyy-MM", new Date()).toString();
+        currentDate.setText(currentMonth);
+
+        String expenseMonthExpression;
+        for (Expense expense : expenses) {
+            expenseMonthExpression = android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString();
+            if (expenseMonthExpression.equals(currentMonth)) {
+                total += expense.getPrice();
+            }
+        }
+
+        Currency currency = new Currency();
+        int currencyIndex = sharedPreferences.getInt("currencyId", Currency.CURRENCY_RON);
+
+        totalExpenses.setText(currency.getSymbolForIndex(currencyIndex)+" "+String.format("%.2f", total));
+
+        ExpenseAdapter expenseAdapter = new ExpenseAdapter(expenses);
+
+        recyclerView.setAdapter(expenseAdapter);
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    public void showSettingsScreen() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void showNewExpenseScreen() {
-        Intent intent = new Intent(this, ExpenseActivity.class);
-        startActivity(intent);
-    }
-
-    public void showReportsScreen() {
-        Intent intent = new Intent(this, ReportsActivity.class);
-        startActivity(intent);
-    }
-
-    public void loadTestData() {
-        ExpenseDb e = new ExpenseDb();
-        InputStreamReader is = null;
-        try {
-            is = new InputStreamReader(getAssets().open("expenses.csv"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        expenses = e.getExpensesFile(is);
-        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-        databaseManager.open();
-        databaseManager.deleteAll();
-        for (Expense expense : expenses) {
-            databaseManager.insert(expense);
-        }
-
-        databaseManager.close();
-        showMainScreen();
     }
 
     @Override
@@ -181,4 +128,64 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void showReportsScreen() {
+        Intent intent = new Intent(this, ReportsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showSettingsScreen() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_actions, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_new_expense) {
+                    showNewExpenseScreen();
+                }
+                if (item.getItemId() == R.id.load_test_data) {
+                    loadTestData();
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    public void showNewExpenseScreen() {
+        Intent intent = new Intent(this, ExpenseActivity.class);
+        startActivity(intent);
+    }
+
+    public void loadTestData() {
+        InputStreamReader is = null;
+        try {
+            is = new InputStreamReader(getAssets().open("expenses.csv"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        expenses = ExpenseFile.getExpensesFile(is);
+
+        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+        databaseManager.deleteAll();
+
+        for (Expense expense : expenses) {
+            databaseManager.insert(expense);
+        }
+
+        databaseManager.close();
+
+        showMainScreen();
+    }
+
+
 }

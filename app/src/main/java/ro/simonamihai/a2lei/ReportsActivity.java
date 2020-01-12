@@ -17,9 +17,9 @@ import java.util.HashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Currency;
 import ro.simonamihai.a2lei.model.Expense;
-import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
 public class ReportsActivity extends AppCompatActivity {
     private LineChart chart;
@@ -51,7 +51,8 @@ public class ReportsActivity extends AppCompatActivity {
                 Color.parseColor("#4CAF50")
                 };
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        ArrayList<Expense> expenses = (new ExpenseDb()).getExpenses(getApplicationContext());
+        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+        ArrayList<Expense> expenses = databaseManager.findAll();
         HashMap<String, Float> hmap = new HashMap<String, Float>();
         for (Expense expense : expenses) {
 

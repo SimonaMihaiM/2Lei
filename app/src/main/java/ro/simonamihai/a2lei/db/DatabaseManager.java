@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import ro.simonamihai.a2lei.model.Expense;
@@ -20,6 +21,7 @@ public class DatabaseManager {
 
     public DatabaseManager(Context c) {
         context = c;
+        this.open();
     }
 
     public DatabaseManager open() throws SQLException {
@@ -78,5 +80,26 @@ public class DatabaseManager {
 
     public void deleteAll(){
         database.delete(DatabaseHelper.TABLE_NAME, "1", null);
+    }
+
+    public ArrayList<Expense> findAll() {
+        ArrayList<Expense> values = new ArrayList<>();
+        Cursor cursor = this.fetch();
+        if (cursor.getCount()>0) {
+            do {
+                int id = cursor.getInt(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.ID));
+                String name = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.NAME));
+                Date createdAt = new Date(cursor.getLong(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.DATE)));
+                double price = cursor.getDouble(
+                        cursor.getColumnIndexOrThrow(DatabaseHelper.PRICE));
+                values.add(new Expense(id, createdAt, name, price));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return values;
     }
 }
