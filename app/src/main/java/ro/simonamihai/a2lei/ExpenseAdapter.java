@@ -21,12 +21,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
-    List<Expense> expenseList;
-    Context context;
+    private List<Expense> expenseList;
+    private Context context;
 
     public ExpenseAdapter(List<Expense> expenseList) {
         this.expenseList = expenseList;
-
     }
 
     @Override
@@ -44,6 +43,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         int currencyIndex = s.getInt("currencyId",Currency.CURRENCY_RON);
 
         Currency currency = new Currency();
+
         holder.textExpenseName.setText(expense.getName());
         holder.textExpenseDate.setText(expense.getStringCreatedAt());
         String priceWithCurrency = currency.getSymbolForIndex(currencyIndex) +" "+ expense.getPrice();
@@ -60,12 +60,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                 expenseList.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
                 notifyItemRangeChanged(holder.getAdapterPosition(), expenseList.size());
+
                 DatabaseManager databaseManager = new DatabaseManager(context);
-                databaseManager.open();
                 databaseManager.delete(expense);
                 databaseManager.close();
             }
         });
+
         holder.itemView.findViewById(R.id.buttonEditExpense).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
