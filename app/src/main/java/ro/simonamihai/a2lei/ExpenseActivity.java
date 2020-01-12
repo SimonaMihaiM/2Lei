@@ -2,7 +2,6 @@ package ro.simonamihai.a2lei;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,9 +23,11 @@ import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Expense;
 
 public class ExpenseActivity extends AppCompatActivity {
-    private Spinner spinner;
+    private Spinner spinnerExpenseName;
+    private TextView expensePrice;
     private CalendarView calendar;
     private Date selectedDate;
+    private Button btnInsertExpense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +36,17 @@ public class ExpenseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        spinner = (Spinner) findViewById(R.id.spinnerList);
+
+        spinnerExpenseName = (Spinner) findViewById(R.id.spinner_expense_name);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.category_entries, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        spinnerExpenseName.setAdapter(adapter);
+
+        expensePrice = findViewById(R.id.insert_expense_price);
 
         calendar = findViewById(R.id.calendar_view);
         calendar.setDate((new Date()).getTime());
@@ -65,71 +69,63 @@ public class ExpenseActivity extends AppCompatActivity {
             }
         });
 
+        btnInsertExpense = findViewById(R.id.btn_upsert_expense);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getIncomingIntent();
     }
 
     public void getIncomingIntent(){
-        Button btnInsertExpense = findViewById(R.id.insertExpenseBtn);
-
-        if (getIntent().hasExtra("updateId")) {
-            final int updateId= getIntent().getIntExtra("updateId",0);
+         if (getIntent().hasExtra("updateId")) {
+            final int updateId = getIntent().getIntExtra("updateId",0);
 
             calendar.setVisibility(View.VISIBLE);
 
             DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-            databaseManager.open();
-            Expense e = databaseManager.findById(updateId);
+            Expense expense = databaseManager.findById(updateId);
             databaseManager.close();
-            Spinner expenseName = findViewById(R.id.spinnerList);
-            TextView expensePrice = findViewById(R.id.inserExpensePrice);
+
             List<String> categories = Arrays.asList(getResources().getStringArray(R.array.category_entries));
-            int categoryIndex = categories.indexOf(e.getName());
-            expenseName.setSelection(categoryIndex);
-            expensePrice.setText(""+ e.getPrice());
-            calendar.setDate(e.getCreatedAt().getTime());
-            selectedDate = e.getCreatedAt();
+            int categoryIndex = categories.indexOf(expense.getName());
+
+            spinnerExpenseName.setSelection(categoryIndex);
+
+            expensePrice.setText(""+ expense.getPrice());
+            calendar.setDate(expense.getCreatedAt().getTime());
+
+            selectedDate = expense.getCreatedAt();
+
             btnInsertExpense.setText("Update");
             btnInsertExpense.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Spinner expenseName = findViewById(R.id.spinnerList);
-                    TextView expensePrice = findViewById(R.id.inserExpensePrice);
-
-
-                    // Expense expense = new Expense(new Date(), expenseName.getText().toString(), Double.parseDouble(expensePrice.getText().toString()));
-
-
                     DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
                     databaseManager.open();
-                    Expense e = databaseManager.findById(updateId);
-                    e.setName(expenseName.getSelectedItem().toString());
-                    e.setPrice(Double.parseDouble(expensePrice.getText().toString()));
 
+                    Expense e = databaseManager.findById(updateId);
+                    e.setName(spinnerExpenseName.getSelectedItem().toString());
+                    e.setPrice(Double.parseDouble(expensePrice.getText().toString()));
                     e.setCreatedAt(new Date(selectedDate.getTime()));
-                    Log.d("Datae",selectedDate.getTime() + " " + e.getCreatedAt().getTime());
+
                     databaseManager.update(e);
                     databaseManager.close();
-                    Snackbar.make(view, "Inserted", Snackbar.LENGTH_LONG)
+
+                    Snackbar.make(view, "Updated", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 }
             });
         } else {
-
             btnInsertExpense.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Spinner expenseName = findViewById(R.id.spinnerList);
-                    TextView expensePrice = findViewById(R.id.inserExpensePrice);
-
-                    Expense expense = new Expense(new Date(), expenseName.getSelectedItem().toString(), Double.parseDouble(expensePrice.getText().toString()));
+                    Expense expense = new Expense(selectedDate, spinnerExpenseName.getSelectedItem().toString(), Double.parseDouble(expensePrice.getText().toString()));
 
                     DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-                    databaseManager.open();
                     databaseManager.insert(expense);
                     databaseManager.close();
+
                     Snackbar.make(view, "Inserted", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);

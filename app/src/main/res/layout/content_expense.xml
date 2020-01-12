@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_expense">
 
     <Spinner
-        android:id="@+id/spinnerList"
+        android:id="@+id/spinner_expense_name"
         android:layout_width="409dp"
         android:layout_height="24dp"
         android:layout_marginStart="1dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/inserExpensePrice"
+        android:id="@+id/insert_expense_price"
         android:layout_width="405dp"
         android:layout_height="47dp"
         android:layout_marginStart="3dp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerList"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_expense_name"
         android:importantForAutofill="no" />
 
     <CalendarView
@@ -42,10 +42,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inserExpensePrice" />
+        app:layout_constraintTop_toBottomOf="@+id/insert_expense_price" />
 
     <Button
-        android:id="@+id/insertExpenseBtn"
+        android:id="@+id/btn_upsert_expense"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inserExpensePrice"
+        app:layout_constraintTop_toBottomOf="@id/insert_expense_price"
         app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
