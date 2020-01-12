@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -22,23 +21,15 @@ import ro.simonamihai.a2lei.model.Currency;
 import ro.simonamihai.a2lei.model.Expense;
 
 public class ReportsActivity extends AppCompatActivity {
-    private LineChart chart;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reports);
+        setContentView(R.layout.layout_piechart);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_barchart);
-
-        PieChart pieChart = findViewById(R.id.chart0);
-
+        PieChart pieChart = findViewById(R.id.pie_chart);
 
         int[] colors = new int[] {
                 Color.parseColor("#E91E63"),
@@ -50,13 +41,17 @@ public class ReportsActivity extends AppCompatActivity {
                 Color.parseColor("#00BCD4"),
                 Color.parseColor("#4CAF50")
                 };
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+
+        // get expenses from database
         DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
         ArrayList<Expense> expenses = databaseManager.findAll();
+
+
+        // add totals for year-month
         HashMap<String, Float> hmap = new HashMap<String, Float>();
         for (Expense expense : expenses) {
-
             String date = android.text.format.DateFormat.format("yyyy-MM", expense.getCreatedAt()).toString();
+
             if (hmap.containsKey(date)) {
                 hmap.put(date, (float)expense.getPrice() + hmap.get(date));
             } else {
@@ -65,32 +60,32 @@ public class ReportsActivity extends AppCompatActivity {
 
         }
 
-        SharedPreferences s = getSharedPreferences("currency_id", MODE_PRIVATE);
-        final int currencyIndex = s.getInt("currencyId",Currency.CURRENCY_RON);
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
         for (String key:hmap.keySet()) {
             pieEntries.add(new PieEntry(hmap.get(key), key));
         }
 
-
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "a");
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
         pieDataSet.setColors(colors);
-        PieData pd = new PieData(pieDataSet);
-        pieChart.setData(pd);
+
+        PieData pieData = new PieData(pieDataSet);
+
+        pieChart.setData(pieData);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("currency_id", MODE_PRIVATE);
+        final int currencyIndex = sharedPreferences.getInt("currencyId", Currency.CURRENCY_RON);
+        final Currency currency = new Currency();
 
         pieDataSet.setValueTextSize(14f);
         pieDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                Currency currency = new Currency();
                 return currency.getSymbolForIndex(currencyIndex) + " " + value;
             }
         });
 
-
         pieChart.invalidate();
         setTitle("Reports");
-
-
     }
 
     @Override
