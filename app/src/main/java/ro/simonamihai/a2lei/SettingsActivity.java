@@ -19,13 +19,6 @@ public class SettingsActivity extends AppCompatActivity implements
 
     private static final String TITLE_TAG = "settingsActivityTitle";
 
-    public static void setCurrencyId(Context ctx, int id) {
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences("currency_id", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("currencyId", id);
-        editor.apply();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +88,8 @@ public class SettingsActivity extends AppCompatActivity implements
         public void onCreatePreferences(final Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.header_preferences, rootKey);
 
+            ListPreference selectorCurrency = findPreference("list_preference_1");
+
             Preference.OnPreferenceChangeListener changeCurrencyListener = new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     Currency currency = new Currency();
@@ -106,8 +101,14 @@ public class SettingsActivity extends AppCompatActivity implements
                     return true;
                 }
             };
-            ListPreference selectorCurrency = findPreference("list_preference_1");
+
             selectorCurrency.setOnPreferenceChangeListener(changeCurrencyListener);
         }
+    }
+    public static void setCurrencyId(Context ctx, int id) {
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences("currency_id", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("currencyId", id);
+        editor.apply();
     }
 }
