@@ -41,7 +41,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Expense expense = expenseList.get(position);
         SharedPreferences s = context.getApplicationContext().getSharedPreferences("currency_id", MODE_PRIVATE);
-        int currencyIndex = s.getInt("currencyId",2);
+        int currencyIndex = s.getInt("currencyId",Currency.CURRENCY_RON);
 
         Currency currency = new Currency();
         holder.textExpenseName.setText(expense.getName());

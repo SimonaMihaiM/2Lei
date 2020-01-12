@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class Currency {
 
+    public static int CURRENCY_DOLLAR = 2;
+    public static int CURRENCY_EURO = 1;
+    public static int CURRENCY_RON = 0;
+
     private ArrayList<String> availableCurrencies;
     private ArrayList<String> currencySymbol;
 
@@ -37,7 +41,7 @@ public class Currency {
     }
 
     public String getCurrencySymbolIndex(int index) {
-        if (index > -1) {
+        if (!this.currencySymbol.get(index).isEmpty()) {
             return this.currencySymbol.get(index);
         }
         return "";

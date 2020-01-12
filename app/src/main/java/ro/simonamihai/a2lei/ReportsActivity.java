@@ -1,59 +1,23 @@
 package ro.simonamihai.a2lei;
 
-import android.Manifest;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.RectF;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.model.GradientColor;
-import com.github.mikephil.charting.utils.EntryXComparator;
-import com.github.mikephil.charting.utils.MPPointF;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import ro.simonamihai.a2lei.db.DatabaseManager;
 import ro.simonamihai.a2lei.model.Currency;
-import ro.simonamihai.a2lei.model.DayAxisValueFormatter;
 import ro.simonamihai.a2lei.model.Expense;
 import ro.simonamihai.a2lei.model.db.ExpenseDb;
 
@@ -101,7 +65,7 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         SharedPreferences s = getSharedPreferences("currency_id", MODE_PRIVATE);
-        final int currencyIndex = s.getInt("currencyId",2);
+        final int currencyIndex = s.getInt("currencyId",Currency.CURRENCY_RON);
         for (String key:hmap.keySet()) {
             pieEntries.add(new PieEntry(hmap.get(key), key));
         }

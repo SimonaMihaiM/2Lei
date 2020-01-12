@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (sharedPreferences.getInt("currencyId", -1) == -1) {
-            editor.putInt("currencyId", 0);
+
+        if (!sharedPreferences.contains("currencyId")) {
+            editor.putInt("currencyId", Currency.CURRENCY_RON);
             editor.apply();
         }
         this.showMainScreen();
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         Currency currency = new Currency();
         SharedPreferences s = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
-        int currencyIndex = s.getInt("currencyId", 2);
+        int currencyIndex = s.getInt("currencyId", Currency.CURRENCY_RON);
         totalV.setText(currency.getCurrencySymbolIndex(currencyIndex)+" "+String.format("%.2f", total));
         expenseAdapter = new ExpenseAdapter(todayExp);
 
