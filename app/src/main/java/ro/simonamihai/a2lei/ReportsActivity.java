@@ -81,7 +81,7 @@ public class ReportsActivity extends AppCompatActivity {
             @Override
             public String getFormattedValue(float value) {
                 Currency currency = new Currency();
-                return currency.getCurrencySymbolIndex(currencyIndex) + " " + value;
+                return currency.getSymbolForIndex(currencyIndex) + " " + value;
             }
         });
 

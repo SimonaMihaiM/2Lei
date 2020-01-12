@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         Currency currency = new Currency();
         SharedPreferences s = getSharedPreferences(CURRENCY_ID, MODE_PRIVATE);
         int currencyIndex = s.getInt("currencyId", Currency.CURRENCY_RON);
-        totalV.setText(currency.getCurrencySymbolIndex(currencyIndex)+" "+String.format("%.2f", total));
+        totalV.setText(currency.getSymbolForIndex(currencyIndex)+" "+String.format("%.2f", total));
         expenseAdapter = new ExpenseAdapter(todayExp);
 
         TextView currentDate = findViewById(R.id.currentDate);

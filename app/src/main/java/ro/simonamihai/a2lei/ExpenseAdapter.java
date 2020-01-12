@@ -46,7 +46,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         Currency currency = new Currency();
         holder.textExpenseName.setText(expense.getName());
         holder.textExpenseDate.setText(expense.getStringCreatedAt());
-        String priceWithCurrency = currency.getCurrencySymbolIndex(currencyIndex) +" "+ expense.getPrice();
+        String priceWithCurrency = currency.getSymbolForIndex(currencyIndex) +" "+ expense.getPrice();
         holder.textExpensePrice.setText(priceWithCurrency);
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -23,24 +23,11 @@ public class Currency {
         this.currencySymbol.add("$");
     }
 
-    public String getCurrencySymbol(String name) {
-        int index = this.availableCurrencies.indexOf(name);
-        return getCurrencySymbolIndex(index);
-    }
-
-    public String getCurrencyName(String symbol) {
-        int index = this.currencySymbol.indexOf(symbol);
-        if (index > -1) {
-            return this.availableCurrencies.get(index);
-        }
-        return "";
-    }
-
-    public int getCurrencyIndex(String name) {
+    public int getIndex(String name) {
         return this.availableCurrencies.indexOf(name);
     }
 
-    public String getCurrencySymbolIndex(int index) {
+    public String getSymbolForIndex(int index) {
         if (!this.currencySymbol.get(index).isEmpty()) {
             return this.currencySymbol.get(index);
         }

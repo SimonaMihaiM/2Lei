@@ -98,7 +98,7 @@ public class SettingsActivity extends AppCompatActivity implements
             Preference.OnPreferenceChangeListener changeCurrencyListener = new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     Currency currency = new Currency();
-                    int currencyIndex = currency.getCurrencyIndex((String) newValue);
+                    int currencyIndex = currency.getIndex((String) newValue);
                     setCurrencyId(getActivity(), currencyIndex);
 
                     Toast.makeText(getActivity(), "Selected currency : " + (String) newValue, Toast.LENGTH_LONG).show();
