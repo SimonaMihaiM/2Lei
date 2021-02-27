@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file:///data/Projects/2Lei/2Lei.iml" filepath="/data/Projects/2Lei/2Lei.iml" />
-      <module fileurl="file:///data/Projects/2Lei/app/app.iml" filepath="/data/Projects/2Lei/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/2Lei.iml" filepath="$PROJECT_DIR$/2Lei.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/2Lei.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/2Lei.app.iml" />
     </modules>
   </component>
 </project>
